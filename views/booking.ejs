@@ -1,0 +1,41 @@
+<h2>View Bookings page</h2>
+<div id="bookingsTb"></div>
+
+<script src='/js/jquery.min.js'></script>
+<script>
+    $(document).ready(function() {
+
+        $.ajax({
+                url: '/api/getbookingbypatientid/' + sessionStorage.id,
+                method: "get"
+            })
+            .done(
+                function(data) {
+                    data.forEach(function(event) {
+                        if (event.status == 'progress') {
+                            $("#bookingsTb").append(`
+                                    <article>
+                                        <p>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button>Enter</button>
+                                        </p>
+                                    </article>
+                                `);
+                        } else {
+                            $("#bookingsTb").append(`
+                                    <article>
+                                        <p>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>hi</button>
+                                        </p>
+                                    </article>
+                                `);
+                        }
+                    });
+                }
+            )
+            .fail(
+                function(err) {
+                    console.log(err.responseText);
+                }
+            )
+    })
+</script>

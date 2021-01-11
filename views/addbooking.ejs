@@ -1,0 +1,61 @@
+<h2>New Booking page</h2>
+<p>
+    <form onsubmit="return addBooking();">
+        <p>
+            <Label>Date:</Label>
+            <input type="datetime-local" id="date">
+        </p>
+        <p>
+            <Label>Doctor:</Label>
+            <select id="doctorid">
+            </select>
+        </p>
+        <p>
+            <input type="submit" value="Book Now!">
+        </p>
+    </form>
+    <div class="statusMessage"></div>
+</p>
+
+<script src='/js/jquery.min.js'></script>
+<script>
+    $(document).ready(function() {
+        $.ajax({
+                url: "/api/doctors/all",
+                method: "get"
+            })
+            .done(function(data) {
+                data.map((doctor) => {
+                    $('#doctorid').append(`
+                            <option value="${doctor.id}">${doctor.name}</option>
+                        `)
+                })
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+    })
+
+    function addBooking() {
+        let fulldate = $("#date").val().split('T')
+        let data = {
+            date: fulldate[0],
+            time: fulldate[1],
+            doctorId: $("#doctorid").val(),
+            patientId: sessionStorage.id,
+            patientName: sessionStorage.name
+        }
+        $.ajax({
+                url: "/api/addbooking",
+                method: "post",
+                data: data
+            })
+            .done(function(data) {
+                $(".statusMessage").text(data.message);
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+        return false;
+    }
+</script>

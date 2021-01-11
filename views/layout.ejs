@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The VitalBox</title>
+    <script src='/js/jquery.min.js'></script>
+    <script>
+        logout = () => {
+            $.ajax({
+                    url: "/api/logout?token=" + sessionStorage.authToken,
+                    method: "get"
+                })
+                .done(function(data) {
+                    sessionStorage.removeItem("login");
+                    sessionStorage.removeItem("authToken");
+                    sessionStorage.removeItem("name");
+                    sessionStorage.removeItem("id");
+                    location.reload();
+                })
+                .fail(function(err) {
+                    console.log(err.responseText);
+                })
+        }
+
+        $(document).ready(function() {
+            if (sessionStorage.login === "user") {
+                $('#loginlogout').append(`<button onclick="logout()">Logout</button>`);
+            } else {
+                $('#loginlogout').append(`<a href="/login">Login Page</a>`);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <p id="loginlogout"></p>
+    <h1 style="color: red;">The VitalBox</h1>
+    <%- body %>
+</body>
+
+</html>

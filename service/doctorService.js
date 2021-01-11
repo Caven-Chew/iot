@@ -1,0 +1,51 @@
+const mongoose = require('mongoose')
+const schema = mongoose.Schema
+let accountSchema = {}
+let accountModel
+
+mongoose.set('useNewUrlParser', true)
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+mongoose.set('useUnifiedTopology', true)
+
+let doctorService = {
+    connect() {
+        mongoose.connect('mongodb://localhost:27017/IOTProjectDB', function(err) {
+            if (err == null) {
+                console.log("Connected to Mongo DB")
+                    //initialize values
+                accountSchema = schema({
+
+                    name: String,
+                    email: String,
+                    password: String
+                })
+                var connection = mongoose.connection
+                accountModel = connection.model("doctoraccounts", accountSchema)
+            } else {
+                console.log("Error connecting to Mongo DB")
+            }
+        })
+    },
+    login(email, password, callback) {
+        accountModel.find({ email: email, password: password }, callback)
+        console.log("Login")
+    },
+    register(name, email, password, callback) {
+        console.log("Register")
+        let newAccount = new accountModel({
+            name: "Dr " + name,
+            email: email,
+            password: password
+        })
+        newAccount.save(callback)
+    },
+    getDoctor(id, callback) {
+        accountModel.find({ _id: id }, callback)
+    },
+    getAllDoctors(callback) {
+        accountModel.find({}, callback)
+    }
+}
+
+module.exports = doctorService

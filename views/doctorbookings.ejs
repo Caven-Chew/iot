@@ -1,0 +1,74 @@
+<h2>View Bookings For Doctor :</h2>
+<div id="bookingsTb"></div>
+<div class="statusMessage"></div>
+
+<script src='/js/jquery.min.js'></script>
+<script>
+    function startSession(bookingId) {
+        $.ajax({
+                url: "/api/videoservice/start/" + bookingId,
+                method: "post"
+            })
+            .done(function(data) {
+                $(".statusMessage").text(data.message);
+                getData();
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+    }
+
+    function stopSession(bookingId) {
+        $.ajax({
+                url: "/api/videoservice/end/" + bookingId,
+                method: "post"
+            })
+            .done(function(data) {
+                $(".statusMessage").text(data.message);
+                getData();
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+    }
+
+    getData = () => {
+        $.ajax({
+                url: '/api/getbookingbypatientid/' + sessionStorage.id,
+                method: "get"
+            })
+            .done(
+                function(data) {
+                    $("#bookingsTb").empty();
+                    data.forEach(function(event) {
+                        if (event.status == 'progress') {
+                            $("#bookingsTb").append(`
+                                <article>
+                                    <p>
+                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
+                                    </p>
+                                </article>
+                            `);
+                        } else {
+                            $("#bookingsTb").append(`
+                                <article>
+                                    <p>
+                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
+                                    </p>
+                                </article>
+                            `);
+                        }
+                    });
+                }
+            )
+            .fail(
+                function(err) {
+                    console.log(err.responseText);
+                }
+            )
+    }
+
+    $(document).ready(function() {
+        getData()
+    })
+</script>
