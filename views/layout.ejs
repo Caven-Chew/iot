@@ -26,16 +26,24 @@
 
         $(document).ready(function() {
             if (sessionStorage.login === "user") {
-                $('#loginlogout').append(`<button onclick="logout()">Logout</button>`);
-            } else {
-                $('#loginlogout').append(`<a href="/login">Login Page</a>`);
+                $('#logout').append(`
+                <button onclick="logout()">Logout</button>
+                `);
             }
+            // else {
+            //     $('#loginlogout').append(`<a href="/login">Login Page</a>`);
+            // }
         });
     </script>
 </head>
 
 <body>
-    <p id="loginlogout"></p>
+    <div id="navi">
+        <button onclick="window.location.href='/booking'">Booking</button>
+        <button onclick="window.location.href='/addbooking'">Add Booking</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+    <p id="logout"></p>
     <h1 style="color: red;">The VitalBox</h1>
     <%- body %>
 </body>

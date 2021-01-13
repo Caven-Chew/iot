@@ -53,14 +53,14 @@ app.post('/api/login', function(req, res) {
     let { email, password } = req.body;
     accountService.login(email, password, function(err, user) {
         if (err) {
-            res.status(401).send("Login unsucessful. Please try again later");
+            res.send({ message: "Login unsucessful. Please try again later" });
         } else {
             if (user == null) {
-                res.status(401).send("Login unsucessful. Please try again later");
+                res.send({ message: "Login unsucessful. Please try again later" });
             } else {
-                let strToHash = user[0].name + Date.now();
+                let strToHash = user.name + Date.now();
                 let token = crypto.createHash('md5').update(strToHash).digest('hex');
-                accountService.updateToken(user[0]._id, token, function(err, user) {
+                accountService.updateToken(user._id, token, function(err, user) {
                     res.status(200).json({ 'message': 'Login successful.', 'token': token, 'name': user.name, 'id': user.id });
                 });
             }
@@ -88,10 +88,15 @@ app.get("/api/logout", function(req, res) {
 app.post('/api/register', function(req, res) {
     const { name, email, password, confirmpassword } = req.body
     if (password === confirmpassword) {
-        accountService.register(name, email, password)
-        res.redirect('/login')
+        accountService.register(name, email, password, (err, acc) => {
+            if (err) {
+                res.send({ message: err })
+            } else {
+                res.send({ data: acc })
+            }
+        })
     } else {
-        res.redirect('back')
+        res.send({ message: err })
     }
 })
 
@@ -101,7 +106,7 @@ app.post('/api/doctor/login', function(req, res) {
         doctorService.login(email, password, function(err, account) {
             console.log(account)
             console.log(account[0]._id)
-            res.cookie('id', account[0]._id).redirect('back')
+            res.cookie('id', account._id).redirect('back')
         })
     } catch (error) {
         console.log(error)

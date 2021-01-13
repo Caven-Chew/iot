@@ -1,21 +1,73 @@
+<script src='/js/jquery.min.js'></script>
+<script>
+    login = (email, password) => {
+        let credentials = {
+            email: email,
+            password: password
+        }
+        $.ajax({
+                url: "/api/login",
+                method: "post",
+                data: credentials
+            })
+            .done(function(data) {
+                $(".statusMessage").text(data.message);
+                console.log(data)
+                    //stores the token returned from the server, if successful login
+                sessionStorage.login = "user";
+                sessionStorage.authToken = data.token;
+                sessionStorage.name = data.name;
+                sessionStorage.id = data.id;
+                window.location.href = "/booking";
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+        return false;
+    }
+
+    register = () => {
+        let credentials = {
+            name: $("#name").val(),
+            email: $("#email").val(),
+            password: $("#password").val(),
+            confirmpassword: $("#confirmpassword").val()
+        }
+        $.ajax({
+                url: "/api/register",
+                method: "post",
+                data: credentials
+            })
+            .done(function(data) {
+                $(".statusMessage").text(data.message);
+                //stores the token returned from the server, if successful login
+                login(credentials.email, credentials.password)
+            })
+            .fail(function(err) {
+                $(".statusMessage").text(err.responseText);
+            })
+        return false;
+    }
+</script>
+
 <h2>Registration page</h2>
 <p>
-    <form method="POST" action="/register">
+    <form onsubmit="return register();">
         <p>
             <Label>Name:</Label>
-            <input type="text" name="name">
+            <input type="text" id="name">
         </p>
         <p>
             <Label>Email:</Label>
-            <input type="text" name="email">
+            <input type="text" id="email">
         </p>
         <p>
             <Label>Password:</Label>
-            <input type="password" name="password">
+            <input type="password" id="password">
         </p>
         <p>
             <Label>Confirm password:</Label>
-            <input type="password" name="confirmpassword">
+            <input type="password" id="confirmpassword">
         </p>
         <p>
             <input type="submit" value="Register">

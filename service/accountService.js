@@ -28,8 +28,8 @@ let accountService = {
         })
     },
     login(email, password, callback) {
-        accountModel.find({ email: email, password: password }, callback)
-        console.log("Login")
+        console.log(email, password)
+        accountModel.findOne({ email: email, password: password }, callback)
     },
     register(name, email, password, callback) {
         console.log("Register")

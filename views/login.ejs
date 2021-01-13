@@ -19,19 +19,19 @@
 <script src='/js/jquery.min.js'></script>
 <script>
     $(document).ready(function() {
-        $(".logoutBtn").click(function() {
-            $.ajax({
-                    url: "/api/logout?token=" + sessionStorage.authToken,
-                    method: "get"
-                })
-                .done(function(data) {
-                    sessionStorage.removeItem("authToken");
-                    location.reload();
-                })
-                .fail(function(err) {
-                    console.log(err.responseText);
-                })
-        });
+        // $(".logoutBtn").click(function() {
+        //     $.ajax({
+        //             url: "/api/logout?token=" + sessionStorage.authToken,
+        //             method: "get"
+        //         })
+        //         .done(function(data) {
+        //             sessionStorage.removeItem("authToken");
+        //             location.reload();
+        //         })
+        //         .fail(function(err) {
+        //             console.log(err.responseText);
+        //         })
+        // });
     });
 
     function login() {
