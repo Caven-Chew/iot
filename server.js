@@ -35,13 +35,13 @@ app.use(bodyParser.urlencoded({
 //General
 
 app.get('/', function(req, res) {
-    res.render(__dirname + "/views/login.ejs")
+    res.render(__dirname + "/views/login")
 })
 
 app.get('/:name', function(req, res) {
     let { name } = req.params
     if (views.includes(name)) {
-        res.render(name)
+        res.render(__dirname + "/views/" + name + "/")
     } else {
         res.send("Error 404. This page doed not exist!")
     }
