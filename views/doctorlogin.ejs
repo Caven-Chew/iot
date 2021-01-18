@@ -1,17 +1,52 @@
 <h2>Doctor Login page</h2>
 <p>
-    <form method="POST" action="/api/doctor/login">
+    <form onsubmit="return login();">
         <p>
             <Label>Email:</Label>
-            <input type="text" name="email">
+            <input type="text" id="email">
         </p>
         <p>
             <Label>Password:</Label>
-            <input type="password" name="password">
+            <input type="password" id="password">
         </p>
         <p>
-            <input type="submit">
+            <input type="submit" value="Login">
         </p>
     </form>
-    <a href="/register">Register</a>
+    <a href="/doctorregister">Register</a>
 </p>
+<script>
+    $(document).ready(function() {
+        if (sessionStorage.login === "doctor") {
+            window.location.assign('/doctorbookings');
+        }
+    })
+    login = () => {
+        var credentials = {
+            email: $("#email").val(),
+            password: $("#password").val()
+        }
+        $.ajax({
+                url: "/api/doctor/login",
+                method: "post",
+                data: credentials
+            })
+            .done((data) => {
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (!data) {
+                    $("#statusMessage").text("Login Fail!");
+                } else {
+                    sessionStorage.login = "doctor";
+                    sessionStorage.authToken = data.token;
+                    sessionStorage.name = data.name;
+                    sessionStorage.id = data.id;
+                    window.location.assign('/doctorbookings');
+                }
+            })
+            .fail((err) => {
+                $("#statusMessage").text(err.responseText);
+            })
+        return false;
+    }
+</script>

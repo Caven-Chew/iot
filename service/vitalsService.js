@@ -45,6 +45,9 @@ let vitalsService = {
                 temperature: temp
             }
         }, callback)
+    },
+    getVitals(sessionId, callback) {
+        vitalsModel.findById(sessionId, { data: 1 }, callback)
     }
 }
 

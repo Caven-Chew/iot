@@ -31,7 +31,6 @@ let bookingService = {
         })
     },
     addBooking(date, time, doctorId, dotorName, patientId, patientName, callback) {
-        console.log("Add booking")
         let newBooking = new bookingModel({
             date: date,
             time: time,
@@ -44,11 +43,9 @@ let bookingService = {
         newBooking.save(callback)
     },
     getBookingsByPatient(patientId, callback) {
-        console.log("Get bookings by patient")
         bookingModel.find({ patientId: patientId }, callback)
     },
     getBookingsByDoctor(doctorId, callback) {
-        console.log("Get bookings by doctor")
         bookingModel.find({ doctorId: doctorId }, callback)
     },
     startVideoSession(bookingId, callback) {

@@ -8,43 +8,65 @@
     <script src='/js/jquery.min.js'></script>
     <script>
         logout = () => {
+            let redi = sessionStorage.login
+            let url = "/api/logout?token=" + sessionStorage.authToken
+            if (redi === "doctor") {
+                url = "/api/doctor/logout?token=" + sessionStorage.authToken
+            }
             $.ajax({
-                    url: "/api/logout?token=" + sessionStorage.authToken,
+                    url: url,
                     method: "get"
                 })
-                .done(function(data) {
-                    sessionStorage.removeItem("login");
-                    sessionStorage.removeItem("authToken");
-                    sessionStorage.removeItem("name");
-                    sessionStorage.removeItem("id");
-                    location.reload();
+                .done((data) => {
+                    if (data.message) {
+                        $("#statusMessage").text(data.message)
+                    } else if (!data.data) {
+                        $("#statusMessage").text("Error logging out!")
+                    } else {
+                        sessionStorage.removeItem("login")
+                        sessionStorage.removeItem("authToken")
+                        sessionStorage.removeItem("name")
+                        sessionStorage.removeItem("id")
+                        if (redi === "user") {
+                            window.location.assign('/login');
+                        } else {
+                            window.location.assign('/doctorlogin');
+                        }
+                    }
                 })
-                .fail(function(err) {
-                    console.log(err.responseText);
+                .fail((err) => {
+                    $("#statusMessage").text(err.responseText)
                 })
         }
 
-        $(document).ready(function() {
-            if (sessionStorage.login === "user") {
-                $('#logout').append(`
+        $(document).ready(() => {
+            if (sessionStorage.login === "user" || sessionStorage.login === "doctor") {
+                $('#logout').html(`
                 <button onclick="logout()">Logout</button>
-                `);
+                `)
             }
-            // else {
-            //     $('#loginlogout').append(`<a href="/login">Login Page</a>`);
-            // }
-        });
+            if (sessionStorage.login) {
+                if (sessionStorage.login === "user") {
+                    $('#navi').html(`
+                <button onclick="window.location.href='/booking'">Booking</button>
+                <button onclick="window.location.href='/addbooking'">Add Booking</button>
+                `)
+                } else {
+                    $('#navi').html(`
+                <button onclick="window.location.href='/doctorbookings'">Booking</button>
+                `)
+                }
+            }
+
+        })
     </script>
 </head>
 
 <body>
-    <div id="navi">
-        <button onclick="window.location.href='/booking'">Booking</button>
-        <button onclick="window.location.href='/addbooking'">Add Booking</button>
-        <button onclick="logout()">Logout</button>
-    </div>
+    <div id="navi"></div>
     <p id="logout"></p>
-    <h1 style="color: red;">The VitalBox</h1>
+    <h1 style="color: red">The VitalBox</h1>
+    <div id="statusMessage"></div>
     <%- body %>
 </body>
 

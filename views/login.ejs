@@ -13,28 +13,16 @@
             <input type="submit">
         </p>
     </form>
-    <div class="statusMessage"></div>
     <a href="/register">Register</a>
 </p>
 <script src='/js/jquery.min.js'></script>
 <script>
     $(document).ready(function() {
-        // $(".logoutBtn").click(function() {
-        //     $.ajax({
-        //             url: "/api/logout?token=" + sessionStorage.authToken,
-        //             method: "get"
-        //         })
-        //         .done(function(data) {
-        //             sessionStorage.removeItem("authToken");
-        //             location.reload();
-        //         })
-        //         .fail(function(err) {
-        //             console.log(err.responseText);
-        //         })
-        // });
-    });
-
-    function login() {
+        if (sessionStorage.login === "user") {
+            window.location.assign('/booking');
+        }
+    })
+    login = () => {
         var credentials = {
             email: $("#email").val(),
             password: $("#password").val()
@@ -44,17 +32,21 @@
                 method: "post",
                 data: credentials
             })
-            .done(function(data) {
-                $(".statusMessage").text(data.message);
-                //stores the token returned from the server, if successful login
-                sessionStorage.login = "user";
-                sessionStorage.authToken = data.token;
-                sessionStorage.name = data.name;
-                sessionStorage.id = data.id;
-
+            .done((data) => {
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (!data) {
+                    $("#statusMessage").text("Login Fail!");
+                } else {
+                    sessionStorage.login = "user";
+                    sessionStorage.authToken = data.token;
+                    sessionStorage.name = data.name;
+                    sessionStorage.id = data.id;
+                    window.location.assign('/booking');
+                }
             })
-            .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+            .fail((err) => {
+                $("#statusMessage").text(err.responseText);
             })
         return false;
     }

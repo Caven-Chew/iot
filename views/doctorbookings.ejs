@@ -1,74 +1,100 @@
 <h2>View Bookings For Doctor :</h2>
 <div id="bookingsTb"></div>
-<div class="statusMessage"></div>
-
-<script src='/js/jquery.min.js'></script>
 <script>
-    function startSession(bookingId) {
+    startSession = (bookingId) => {
         $.ajax({
                 url: "/api/videoservice/start/" + bookingId,
                 method: "post"
             })
-            .done(function(data) {
-                $(".statusMessage").text(data.message);
-                getData();
+            .done((data) => {
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (!data.data) {
+                    $("#statusMessage").text("Error starting video service");
+                } else {
+                    $("#statusMessage").text("Video service started");
+                    getData();
+                }
             })
-            .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+            .fail((err) => {
+                $("#statusMessage").text(err.responseText);
             })
     }
 
-    function stopSession(bookingId) {
+    stopSession = (bookingId) => {
         $.ajax({
                 url: "/api/videoservice/end/" + bookingId,
                 method: "post"
             })
-            .done(function(data) {
-                $(".statusMessage").text(data.message);
-                getData();
+            .done((data) => {
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (!data.data) {
+                    $("#statusMessage").text("Error stopping video service");
+                } else {
+                    $("#statusMessage").text("Video service stopped");
+                    getData();
+                }
             })
-            .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+            .fail((err) => {
+                $("#statusMessage").text(err.responseText);
             })
+    }
+
+    startVideo = (bookingId) => {
+        window.location.assign('/video/' + bookingId);
     }
 
     getData = () => {
         $.ajax({
-                url: '/api/getbookingbypatientid/' + sessionStorage.id,
+                url: '/api/getbookingbydoctorid/' + sessionStorage.id,
                 method: "get"
             })
             .done(
-                function(data) {
-                    $("#bookingsTb").empty();
-                    data.forEach(function(event) {
-                        if (event.status == 'progress') {
-                            $("#bookingsTb").append(`
-                                <article>
-                                    <p>
-                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
-                                    </p>
-                                </article>
-                            `);
+                (data) => {
+                    if (data.message) {
+                        $("#statusMessage").text(data.message);
+                    } else if (!data.data) {
+                        $("#statusMessage").text("Error fetching data!");
+                    } else {
+                        if (data.data.length === 0) {
+                            $("#statusMessage").text("No records");
                         } else {
-                            $("#bookingsTb").append(`
+                            $("#bookingsTb").empty();
+                            data.data.forEach((event) => {
+                                if (event.status == 'progress') {
+                                    $("#bookingsTb").append(`
                                 <article>
                                     <p>
-                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
+                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
                                     </p>
                                 </article>
                             `);
+                                } else {
+                                    $("#bookingsTb").append(`
+                                <article>
+                                    <p>
+                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')" disabled>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
+                                    </p>
+                                </article>
+                            `);
+                                }
+                            });
                         }
-                    });
+
+                    }
                 }
             )
-            .fail(
-                function(err) {
-                    console.log(err.responseText);
-                }
-            )
+            .fail((err) => {
+                $("#statusMessage").text(err.responseText)
+            })
     }
 
-    $(document).ready(function() {
+    $(document).ready(() => {
+        if (sessionStorage.login !== "doctor") {
+            alert("Please login!")
+            window.location.assign('/doctorlogin')
+        }
         getData()
     })
 </script>

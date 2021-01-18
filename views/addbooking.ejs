@@ -14,25 +14,35 @@
             <input type="submit" value="Book Now!">
         </p>
     </form>
-    <div class="statusMessage"></div>
 </p>
 
 <script src='/js/jquery.min.js'></script>
 <script>
     $(document).ready(function() {
+        if (sessionStorage.login !== "user") {
+            alert("Please login!")
+            window.location.assign('/login');
+        }
+
         $.ajax({
                 url: "/api/doctors/all",
                 method: "get"
             })
             .done(function(data) {
-                data.map((doctor) => {
-                    $('#doctorid').append(`
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (!data.data || data.data.length === 0) {
+                    $("#statusMessage").text("No doctor available");
+                } else {
+                    data.data.map((doctor) => {
+                        $('#doctorid').append(`
                             <option value="${doctor.id}">${doctor.name}</option>
                         `)
-                })
+                    })
+                }
             })
             .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText);
             })
     })
 
@@ -51,10 +61,16 @@
                 data: data
             })
             .done(function(data) {
-                $(".statusMessage").text(data.message);
+                if (data.message) {
+                    $("#statusMessage").text(data.message);
+                } else if (data.data) {
+                    $("#statusMessage").text(data.data);
+                } else {
+                    $("#statusMessage").text("Error booking!");
+                }
             })
             .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText);
             })
         return false;
     }

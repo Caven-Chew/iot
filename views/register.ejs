@@ -1,5 +1,11 @@
 <script src='/js/jquery.min.js'></script>
 <script>
+    $(document).ready(function() {
+        if (sessionStorage.login === "user") {
+            window.location.assign('/booking');
+        }
+    })
+
     login = (email, password) => {
         let credentials = {
             email: email,
@@ -11,14 +17,17 @@
                 data: credentials
             })
             .done(function(data) {
-                $(".statusMessage").text(data.message);
-                console.log(data)
-                    //stores the token returned from the server, if successful login
-                sessionStorage.login = "user";
-                sessionStorage.authToken = data.token;
-                sessionStorage.name = data.name;
-                sessionStorage.id = data.id;
-                window.location.href = "/booking";
+                if (data.message) {
+                    $(".statusMessage").text(data.message)
+                } else if (!data.data) {
+                    $(".statusMessage").text("Login fail")
+                } else {
+                    sessionStorage.login = "user";
+                    sessionStorage.authToken = data.token;
+                    sessionStorage.name = data.name;
+                    sessionStorage.id = data.id;
+                    window.location.href = "/booking";
+                }
             })
             .fail(function(err) {
                 $(".statusMessage").text(err.responseText);
@@ -39,9 +48,13 @@
                 data: credentials
             })
             .done(function(data) {
-                $(".statusMessage").text(data.message);
-                //stores the token returned from the server, if successful login
-                login(credentials.email, credentials.password)
+                if (data.message) {
+                    $(".statusMessage").text(data.message);
+                } else if (!data.data) {
+                    $(".statusMessage").text("Registeration fail")
+                } else {
+                    login(credentials.email, credentials.password)
+                }
             })
             .fail(function(err) {
                 $(".statusMessage").text(err.responseText);

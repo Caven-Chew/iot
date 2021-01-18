@@ -18,7 +18,8 @@ let doctorService = {
 
                     name: String,
                     email: String,
-                    password: String
+                    password: String,
+                    token: String
                 })
                 var connection = mongoose.connection
                 accountModel = connection.model("doctoraccounts", accountSchema)
@@ -28,7 +29,7 @@ let doctorService = {
         })
     },
     login(email, password, callback) {
-        accountModel.find({ email: email, password: password }, callback)
+        accountModel.findOne({ email: email, password: password }, callback)
         console.log("Login")
     },
     register(name, email, password, callback) {
@@ -45,6 +46,21 @@ let doctorService = {
     },
     getAllDoctors(callback) {
         accountModel.find({}, callback)
+    },
+    updateToken(id, token, callback) {
+        accountModel.findByIdAndUpdate(id, { token: token }, callback)
+    },
+    removeToken(id, callback) {
+        accountModel.findByIdAndUpdate(id, { $unset: { token: 1 } }, callback)
+    },
+    getUserfromToken(token, callback) {
+        accountModel.find({ token: token }, callback)
+    },
+    checkToken(token, callback) {
+        accountModel.findOne({ token: token }, callback);
+    },
+    removeToken(id, callback) {
+        accountModel.findByIdAndUpdate(id, { $unset: { token: 1 } }, callback);
     }
 }
 

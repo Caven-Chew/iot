@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
 app.get('/:name', function(req, res) {
     let { name } = req.params
     if (views.includes(name)) {
-        res.render(__dirname + "/views/" + name + "/")
+        res.render(name + ".ejs")
     } else {
         res.send("Error 404. This page doed not exist!")
     }
@@ -53,15 +53,19 @@ app.post('/api/login', function(req, res) {
     let { email, password } = req.body;
     accountService.login(email, password, function(err, user) {
         if (err) {
-            res.send({ message: "Login unsucessful. Please try again later" });
+            res.send({ message: "Login unsucessful! Please try again." });
         } else {
             if (user == null) {
-                res.send({ message: "Login unsucessful. Please try again later" });
+                res.send({ message: "Login unsucessful! Please try again." });
             } else {
                 let strToHash = user.name + Date.now();
                 let token = crypto.createHash('md5').update(strToHash).digest('hex');
                 accountService.updateToken(user._id, token, function(err, user) {
-                    res.status(200).json({ 'message': 'Login successful.', 'token': token, 'name': user.name, 'id': user.id });
+                    if (err || !user) {
+                        res.send({ message: "Login unsucessful! Please try again." })
+                    } else {
+                        res.send({ data: 'Login successful!', token: token, name: user.name, id: user.id })
+                    }
                 });
             }
         }
@@ -71,14 +75,20 @@ app.post('/api/login', function(req, res) {
 app.get("/api/logout", function(req, res) {
     var token = req.query.token;
     if (token == undefined) {
-        res.status(401).send("No tokens are provided");
+        res.status(401).send({ message: "No tokens are provided" });
     } else {
         accountService.checkToken(token, function(err, user) {
             if (err || user == null) {
-                res.status(401).send("Invalid token provided");
+                res.send({ message: "Invalid token provided" });
             } else {
-                accountService.removeToken(user._id, function(err, user) {
-                    res.status(200).send("Logout successfully")
+                accountService.removeToken(user._id, function(err, myuser) {
+                    if (err) {
+                        res.send({ message: "Logout failed" });
+                    } else if (!myuser) {
+                        res.send({ message: "Logout failed" });
+                    } else {
+                        res.send({ data: "Logout successfully" })
+                    }
                 });
             }
         })
@@ -89,14 +99,14 @@ app.post('/api/register', function(req, res) {
     const { name, email, password, confirmpassword } = req.body
     if (password === confirmpassword) {
         accountService.register(name, email, password, (err, acc) => {
-            if (err) {
+            if (err || !acc) {
                 res.send({ message: err })
             } else {
                 res.send({ data: acc })
             }
         })
     } else {
-        res.send({ message: err })
+        res.send({ message: "Registration unsucessful. Please try again" });
     }
 })
 
@@ -104,23 +114,71 @@ app.post('/api/doctor/login', function(req, res) {
     const { email, password } = req.body
     try {
         doctorService.login(email, password, function(err, account) {
-            console.log(account)
-            console.log(account[0]._id)
-            res.cookie('id', account._id).redirect('back')
+            if (err) {
+                res.send({ message: "Login unsucessful. Please try again" });
+            } else {
+                if (account == null || !account) {
+                    res.send({ message: "Login unsucessful. Please try again" });
+                } else {
+                    let strToHash = "" + account.name + Date.now();
+                    var token = crypto.createHash('md5').update(strToHash).digest('hex');
+                    doctorService.updateToken(account._id, token, (err, user) => {
+                        if (err) {
+                            res.send({ message: "Login unsucessful. Please try again" });
+                        } else {
+                            res.send({ data: 'Success', token: token, name: user.name, id: user._id });
+                        }
+                    })
+                }
+            }
         })
     } catch (error) {
-        console.log(error)
+        res.send({ message: "Login unsucessful. Please try again" });
+    }
+})
+
+app.get("/api/doctor/logout", (req, res) => {
+    var token = req.query.token;
+    if (token == undefined) {
+        res.send({ message: "No tokens are provided" });
+    } else {
+        doctorService.checkToken(token, function(err, user) {
+            if (err || user == null) {
+                res.send({ message: "Invalid token provided" });
+            } else {
+                doctorService.removeToken(user._id, function(err, myuser) {
+                    if (err) {
+                        res.send({ message: "Logout failed" });
+                    } else if (!myuser) {
+                        res.send({ message: "Logout failed" });
+                    } else {
+                        res.send({ data: "Logout successfully" })
+                    }
+                });
+            }
+        })
     }
 })
 
 app.post('/api/doctor/register', function(req, res) {
-    const { name, email, password, confirmpassword } = req.body
-    if (password === confirmpassword) {
-        doctorService.register(name, email, password)
-        res.redirect('/login')
-    } else {
-        res.redirect('back')
-    }
+    const { name, email, password } = req.body
+    doctorService.register(name, email, password, (err, account) => {
+        if (err) {
+            req.send({ message: err })
+        } else if (!account) {
+            req.send({ message: "Error registering account!" })
+        } else {
+            let strToHash = "" + account.name + Date.now();
+            var token = crypto.createHash('md5').update(strToHash).digest('hex');
+            doctorService.updateToken(account._id, token, (err, user) => {
+                if (err) {
+                    res.send({ message: "Login unsucessful. Please try again" });
+                } else {
+                    res.send({ data: 'Success', token: token, name: user.name, id: user._id });
+                }
+            })
+        }
+    })
 })
 
 app.get('/api/doctors/all', (req, res) => {
@@ -134,7 +192,7 @@ app.get('/api/doctors/all', (req, res) => {
                     id: doctor._id
                 })
             })
-            res.send(docList)
+            res.send({ data: docList })
         } else {
             res.send({ message: "error!" })
         }
@@ -145,13 +203,12 @@ app.get('/api/doctors/all', (req, res) => {
 
 app.post('/api/addbooking', (req, res) => {
     const { date, time, doctorId, patientId, patientName } = req.body
-    console.log(req.body)
     doctorService.getDoctor(doctorId, (err, doctor) => {
         if (!err) {
             if (doctor[0]) {
                 console.log(date, time, doctorId, doctor[0].name, patientId, patientName)
                 bookingService.addBooking(date, time, doctorId, doctor[0].name, patientId, patientName)
-                res.send({ message: "Booked Successfully!" })
+                res.send({ data: "Booked Successfully!" })
             } else {
                 res.send({ message: "Booked Failed!" })
             }
@@ -164,38 +221,54 @@ app.post('/api/addbooking', (req, res) => {
 app.get('/api/getbookingbypatientid/:id', (req, res) => {
     let { id } = req.params
     bookingService.getBookingsByPatient(id, (err, booking) => {
-        res.send(booking)
+        if (err) {
+            res.send({ message: err })
+        } else if (!booking) {
+            res.send({ message: "Error getting booking record" })
+        } else {
+
+            res.send({ data: booking })
+        }
     })
 })
 
 app.get('/api/getbookingbydoctorid/:id', (req, res) => {
     let { id } = req.params
     bookingService.getBookingsByDoctor(id, function(err, bookings) {
-        res.send(bookings);
+        if (err) {
+            res.send({ message: "Error fetching data!" })
+        } else if (!bookings) {
+            res.send({ message: "No data fetched!" })
+        } else {
+            res.send({ data: bookings })
+        }
     })
 })
 
-//Doctor Service
+//Video Service
 
 app.post('/api/videoservice/start/:bookingId', (req, res) => {
     const { bookingId } = req.params
-    bookingService.startVideoSession(bookingId, (err) => {
+    bookingService.startVideoSession(bookingId, (err, session) => {
         if (err) {
-            res.send({ message: "Fail to start!" })
+            res.send({ message: "Fail to start!1" })
+        } else if (!session || session.n === 0) {
+            res.send({ message: "Fail to start!2" })
         } else {
-            res.send({ message: "Call started!" })
+            res.send({ data: "Call started!" })
         }
-
     })
 })
 
 app.post('/api/videoservice/end/:bookingId', (req, res) => {
     const { bookingId } = req.params
-    bookingService.endVideoSession(bookingId, (err) => {
+    bookingService.endVideoSession(bookingId, (err, session) => {
         if (err) {
-            res.send({ message: "Fail to stop!" })
+            res.send({ message: "Fail to stop!1" })
+        } else if (!session || session.n === 0) {
+            res.send({ message: "Fail to stop!2" })
         } else {
-            res.send({ message: "Call stoped!" })
+            res.send({ data: "Call Stopped!" })
         }
     })
 })
@@ -208,6 +281,19 @@ app.get('/open/api/newsession', (req, res) => {
             res.send(session)
         } else {
             res.send({ message: "Error starting session" })
+        }
+    })
+})
+
+app.get('/open/api/:id', (req, res) => {
+    const { id } = req.params
+    vitalsService.getVitals(id, (err, session) => {
+        if (err) {
+            res.send({ message: err })
+        } else if (!session) {
+            res.send({ message: "Error fetching data" })
+        } else {
+            res.send({ data: session })
         }
     })
 })
@@ -225,11 +311,11 @@ app.post('/open/api/:id', (req, res) => {
 
 })
 
-//Video chat
+//Video call
 
 app.get('/video/:room', (req, res) => {
     // console.log('login: ', req.cookies.id)
-    res.render('room', { roomId: req.params.room })
+    res.render('room', { roomId: req.params.room, layout: "room" })
 })
 
 io.on('connection', (socket) => {

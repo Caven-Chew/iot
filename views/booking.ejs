@@ -3,7 +3,14 @@
 
 <script src='/js/jquery.min.js'></script>
 <script>
+    startVideo = (bookingId) => {
+        window.location.assign('/video/' + bookingId);
+    }
     $(document).ready(function() {
+        if (sessionStorage.login !== "user") {
+            alert("Please login!")
+            window.location.assign('/login');
+        }
 
         $.ajax({
                 url: '/api/getbookingbypatientid/' + sessionStorage.id,
@@ -11,30 +18,36 @@
             })
             .done(
                 function(data) {
-                    data.forEach(function(event) {
-                        if (event.status == 'progress') {
-                            $("#bookingsTb").append(`
+                    if (data.message) {
+                        $("#statusMessage").text(data.message)
+                    } else if (!data.data || data.data.length === 0) {
+                        $("#statusMessage").text("No record fetched");
+                    } else {
+                        data.data.forEach(function(event) {
+                            if (event.status == 'progress') {
+                                $("#bookingsTb").append(`
                                     <article>
                                         <p>
-                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button>Enter</button>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button>
                                         </p>
                                     </article>
                                 `);
-                        } else {
-                            $("#bookingsTb").append(`
+                            } else {
+                                $("#bookingsTb").append(`
                                     <article>
                                         <p>
                                             ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>hi</button>
                                         </p>
                                     </article>
                                 `);
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             )
             .fail(
                 function(err) {
-                    console.log(err.responseText);
+                    $("#statusMessage").text(err.responseText);
                 }
             )
     })
