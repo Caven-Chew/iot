@@ -24,7 +24,7 @@
 <script>
     $(document).ready(function() {
         if (sessionStorage.login === "doctor") {
-            window.location.assign('/doctorbookings');
+            window.location.assign('/doctorbookings')
         }
     })
     register = () => {
@@ -36,7 +36,6 @@
                 email: $("#email").val(),
                 password: $("#password").val()
             }
-            console.log(credentials)
         }
         $.ajax({
                 url: "/api/doctor/register",

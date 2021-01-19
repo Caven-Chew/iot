@@ -1,6 +1,6 @@
 <h2>New Booking page</h2>
 <p>
-    <form onsubmit="return addBooking();">
+    <form onsubmit="return addBooking()">
         <p>
             <Label>Date:</Label>
             <input type="datetime-local" id="date">
@@ -21,7 +21,7 @@
     $(document).ready(function() {
         if (sessionStorage.login !== "user") {
             alert("Please login!")
-            window.location.assign('/login');
+            window.location.assign('/login')
         }
 
         $.ajax({
@@ -30,9 +30,9 @@
             })
             .done(function(data) {
                 if (data.message) {
-                    $("#statusMessage").text(data.message);
+                    $("#statusMessage").text(data.message)
                 } else if (!data.data || data.data.length === 0) {
-                    $("#statusMessage").text("No doctor available");
+                    $("#statusMessage").text("No doctor available")
                 } else {
                     data.data.map((doctor) => {
                         $('#doctorid').append(`
@@ -42,7 +42,7 @@
                 }
             })
             .fail(function(err) {
-                $("#statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText)
             })
     })
 
@@ -62,16 +62,16 @@
             })
             .done(function(data) {
                 if (data.message) {
-                    $("#statusMessage").text(data.message);
+                    $("#statusMessage").text(data.message)
                 } else if (data.data) {
-                    $("#statusMessage").text(data.data);
+                    $("#statusMessage").text(data.data)
                 } else {
-                    $("#statusMessage").text("Error booking!");
+                    $("#statusMessage").text("Error booking!")
                 }
             })
             .fail(function(err) {
-                $("#statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText)
             })
-        return false;
+        return false
     }
 </script>

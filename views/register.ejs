@@ -2,7 +2,7 @@
 <script>
     $(document).ready(function() {
         if (sessionStorage.login === "user") {
-            window.location.assign('/booking');
+            window.location.assign('/booking')
         }
     })
 
@@ -22,17 +22,17 @@
                 } else if (!data.data) {
                     $(".statusMessage").text("Login fail")
                 } else {
-                    sessionStorage.login = "user";
-                    sessionStorage.authToken = data.token;
-                    sessionStorage.name = data.name;
-                    sessionStorage.id = data.id;
-                    window.location.href = "/booking";
+                    sessionStorage.login = "user"
+                    sessionStorage.authToken = data.token
+                    sessionStorage.name = data.name
+                    sessionStorage.id = data.id
+                    window.location.href = "/booking"
                 }
             })
             .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+                $(".statusMessage").text(err.responseText)
             })
-        return false;
+        return false
     }
 
     register = () => {
@@ -49,7 +49,7 @@
             })
             .done(function(data) {
                 if (data.message) {
-                    $(".statusMessage").text(data.message);
+                    $(".statusMessage").text(data.message)
                 } else if (!data.data) {
                     $(".statusMessage").text("Registeration fail")
                 } else {
@@ -57,15 +57,15 @@
                 }
             })
             .fail(function(err) {
-                $(".statusMessage").text(err.responseText);
+                $(".statusMessage").text(err.responseText)
             })
-        return false;
+        return false
     }
 </script>
 
 <h2>Registration page</h2>
 <p>
-    <form onsubmit="return register();">
+    <form onsubmit="return register()">
         <p>
             <Label>Name:</Label>
             <input type="text" id="name">

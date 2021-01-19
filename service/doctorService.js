@@ -30,10 +30,8 @@ let doctorService = {
     },
     login(email, password, callback) {
         accountModel.findOne({ email: email, password: password }, callback)
-        console.log("Login")
     },
     register(name, email, password, callback) {
-        console.log("Register")
         let newAccount = new accountModel({
             name: "Dr " + name,
             email: email,
@@ -57,10 +55,10 @@ let doctorService = {
         accountModel.find({ token: token }, callback)
     },
     checkToken(token, callback) {
-        accountModel.findOne({ token: token }, callback);
+        accountModel.findOne({ token: token }, callback)
     },
     removeToken(id, callback) {
-        accountModel.findByIdAndUpdate(id, { $unset: { token: 1 } }, callback);
+        accountModel.findByIdAndUpdate(id, { $unset: { token: 1 } }, callback)
     }
 }
 

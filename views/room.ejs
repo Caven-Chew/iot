@@ -68,7 +68,15 @@
 
         </div>
         <div class="mainRight">
-            Connection to VitalBox...
+            <div id="statusMessage"></div>
+            <p id="cntContainer">
+                <label>Enter VitalBox Code:</label>
+                <input type="text" id="vtbcode">
+                <button onclick="connectvtb()">Connect</button>
+            </p>
+            <p id="vtbout">
+                Connection to VitalBox...
+            </p>
             <!-- <div class="mainHeader">
                 <h6>Chat</h6>
             </div>
@@ -84,19 +92,49 @@
         </div>
     </div>
 </body>
+<script src='/js/jquery.min.js'></script>
 <script>
     $(document).ready(function() {
         if (!sessionStorage.login) {
             alert("Please login!")
-            window.location.assign('/login');
+            window.location.assign('/login')
         }
     })
 
+    connectvtb = () => {
+        let vtbcode = $("#vtbcode").val()
+        setInterval(() => {
+            $.ajax({
+                    url: "/open/api/" + vtbcode,
+                    method: "get"
+                })
+                .done(function(data) {
+                    if (data.message) {
+                        $(".statusMessage").text(data.message)
+                    } else if (!data.data) {
+                        $(".statusMessage").text("Connection fail")
+                    } else {
+                        $("#cntContainer").empty()
+                        $("#vtbout").empty()
+                        $("#vtbout").append(`
+                    Heartrate: ${data.data.data.heartrate}<br>
+                    oxygen rate: ${data.data.data.o2}<br>
+                    temperature: ${data.data.data.temperature}<br>
+                    `)
+                    }
+                })
+                .fail(function(err) {
+                    $(".statusMessage").text(err.responseText)
+                })
+        }, 3000)
+        return false
+    }
+
     leaveMeeting = () => {
         if (sessionStorage.login === "doctor") {
-            window.location.assign('/doctorbookings');
+            window.location.assign('/doctorbookings')
         } else {
-            window.location.assign('/booking');
+            window.location.assign('/booking')
         }
     }
 </script>

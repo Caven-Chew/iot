@@ -8,16 +8,16 @@
             })
             .done((data) => {
                 if (data.message) {
-                    $("#statusMessage").text(data.message);
+                    $("#statusMessage").text(data.message)
                 } else if (!data.data) {
-                    $("#statusMessage").text("Error starting video service");
+                    $("#statusMessage").text("Error starting video service")
                 } else {
-                    $("#statusMessage").text("Video service started");
-                    getData();
+                    $("#statusMessage").text("Video service started")
+                    getData()
                 }
             })
             .fail((err) => {
-                $("#statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText)
             })
     }
 
@@ -28,21 +28,21 @@
             })
             .done((data) => {
                 if (data.message) {
-                    $("#statusMessage").text(data.message);
+                    $("#statusMessage").text(data.message)
                 } else if (!data.data) {
-                    $("#statusMessage").text("Error stopping video service");
+                    $("#statusMessage").text("Error stopping video service")
                 } else {
-                    $("#statusMessage").text("Video service stopped");
-                    getData();
+                    $("#statusMessage").text("Video service stopped")
+                    getData()
                 }
             })
             .fail((err) => {
-                $("#statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText)
             })
     }
 
     startVideo = (bookingId) => {
-        window.location.assign('/video/' + bookingId);
+        window.location.assign('/video/' + bookingId)
     }
 
     getData = () => {
@@ -53,14 +53,14 @@
             .done(
                 (data) => {
                     if (data.message) {
-                        $("#statusMessage").text(data.message);
+                        $("#statusMessage").text(data.message)
                     } else if (!data.data) {
-                        $("#statusMessage").text("Error fetching data!");
+                        $("#statusMessage").text("Error fetching data!")
                     } else {
                         if (data.data.length === 0) {
-                            $("#statusMessage").text("No records");
+                            $("#statusMessage").text("No records")
                         } else {
-                            $("#bookingsTb").empty();
+                            $("#bookingsTb").empty()
                             data.data.forEach((event) => {
                                 if (event.status == 'progress') {
                                     $("#bookingsTb").append(`
@@ -69,7 +69,7 @@
                                         ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
                                     </p>
                                 </article>
-                            `);
+                            `)
                                 } else {
                                     $("#bookingsTb").append(`
                                 <article>
@@ -77,9 +77,9 @@
                                         ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')" disabled>Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
                                     </p>
                                 </article>
-                            `);
+                            `)
                                 }
-                            });
+                            })
                         }
 
                     }

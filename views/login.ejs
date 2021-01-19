@@ -1,6 +1,6 @@
 <h2>Login page</h2>
 <p>
-    <form onsubmit="return login();">
+    <form onsubmit="return login()">
         <p>
             <Label>Email:</Label>
             <input type="text" name="email" id="email">
@@ -19,7 +19,7 @@
 <script>
     $(document).ready(function() {
         if (sessionStorage.login === "user") {
-            window.location.assign('/booking');
+            window.location.assign('/booking')
         }
     })
     login = () => {
@@ -34,20 +34,20 @@
             })
             .done((data) => {
                 if (data.message) {
-                    $("#statusMessage").text(data.message);
+                    $("#statusMessage").text(data.message)
                 } else if (!data) {
-                    $("#statusMessage").text("Login Fail!");
+                    $("#statusMessage").text("Login Fail!")
                 } else {
-                    sessionStorage.login = "user";
-                    sessionStorage.authToken = data.token;
-                    sessionStorage.name = data.name;
-                    sessionStorage.id = data.id;
-                    window.location.assign('/booking');
+                    sessionStorage.login = "user"
+                    sessionStorage.authToken = data.token
+                    sessionStorage.name = data.name
+                    sessionStorage.id = data.id
+                    window.location.assign('/booking')
                 }
             })
             .fail((err) => {
-                $("#statusMessage").text(err.responseText);
+                $("#statusMessage").text(err.responseText)
             })
-        return false;
+        return false
     }
 </script>
