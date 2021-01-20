@@ -45,6 +45,9 @@ let bookingService = {
     getBookingsByPatient(patientId, callback) {
         bookingModel.find({ patientId: patientId }, callback)
     },
+    getBookingById(id, callback) {
+        bookingModel.findById(id, callback)
+    },
     getBookingsByDoctor(doctorId, callback) {
         bookingModel.find({ doctorId: doctorId }, callback)
     },

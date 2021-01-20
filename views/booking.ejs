@@ -1,7 +1,7 @@
 <h2>View Bookings page</h2>
 Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change</button>
 <div id="changearkit">
-    Kit code:
+    <label>code:</label>
     <input type="text" id="newArkit"><br>
     <button onclick="changeKit()">Change</button>
 </div>
@@ -14,18 +14,20 @@ Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change
     }
 
     showChange = () => {
-        $("#changearkit").css('display',"block")
+        $("#changearkit").css('display', "block")
     }
 
     changeKit = () => {
         $.ajax({
-            url: '/open/api/kit/' + sessionStorage.id,
-            method: "post",
-            data: { arkit: $("#newArkit").val() }
+                url: '/open/api/kit/' + sessionStorage.id,
+                method: "post",
+                data: {
+                    arkit: $("#newArkit").val()
+                }
             })
             .done(
                 (data) => {
-                    if(data.message) {
+                    if (data.message) {
                         $("#statusMessage").text(data.message)
                     } else {
                         $("#statusMessage").text("Kit Change")
@@ -36,23 +38,29 @@ Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change
     }
 
     $(document).ready(function() {
-        $("#changearkit").css('display',"none")
-
+        $("#changearkit").css('display', "none")
         if (sessionStorage.login !== "user") {
             alert("Please login!")
             window.location.assign('/login')
         }
 
+        let gotKit = false
+
         $.ajax({
-            url: '/open/api/kit/' + sessionStorage.id,
-            method: "get"
+                url: '/open/api/kit/' + sessionStorage.id,
+                method: "get"
             })
             .done(
                 (data) => {
-                    if(data.message) {
+                    if (data.message) {
                         $("#statusMessage").text(data.message)
                     } else {
                         $("#arkitDis").text(data.data.arKit)
+                    }
+                    if (data.data.arKit !== "") {
+                        gotKit = true
+                    } else {
+                        alert("Please enter Vital Box kitid")
                     }
                 }
             )
@@ -68,23 +76,35 @@ Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change
                     } else if (!data.data || data.data.length === 0) {
                         $("#statusMessage").text("No record fetched")
                     } else {
+                        $("#statusMessage").text("You will need to enter Vital Box kitid to start")
                         data.data.forEach(function(event) {
-                            if (event.status == 'progress') {
+                            console.log(gotKit)
+                            if (!gotKit) {
                                 $("#bookingsTb").append(`
+                                    <article>
+                                        <p>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button>
+                                        </p>
+                                    </article>
+                                `)
+                            } else {
+                                if (event.status == 'progress') {
+                                    $("#bookingsTb").append(`
                                     <article>
                                         <p>
                                             ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button>
                                         </p>
                                     </article>
                                 `)
-                            } else {
-                                $("#bookingsTb").append(`
+                                } else {
+                                    $("#bookingsTb").append(`
                                     <article>
                                         <p>
-                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>hi</button>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button>
                                         </p>
                                     </article>
                                 `)
+                                }
                             }
                         })
                     }

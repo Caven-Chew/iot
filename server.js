@@ -276,26 +276,37 @@ app.post('/api/videoservice/end/:bookingId', (req, res) => {
 
 app.post('/open/api/newsession/:code', (req, res) => {
     const { code } = req.params
-    //var code = req.params.code
     vitalsService.createSession(code, (err, session) => {
         if (!err) {
-            res.send(session)
+            res.send({ data: "Session created" })
         } else {
-            res.send({ message: "Error starting session" })
+            res.send({ message: "Error creating session" })
         }
     })
 })
 
 app.get('/open/api/:code', (req, res) => {
     const { code } = req.params
-    vitalsService.getVitals(code, (err, session) => {
+    bookingService.getBookingById(code, (err, bk) => {
         if (err) {
             res.send({ message: err })
-        } else if (!session) {
-            res.send({ message: "Error fetching data" })
         } else {
-            res.send({ data: session })
+            accountService.getKit(bk.patientId, (err, kitid) => {
+                if (err) {
+                    res.send({ message: err })
+                } else {
+                    vitalsService.getVitals(kitid.arKit, (err, vitals) => {
+                        if (err) {
+                            res.send({ message: err })
+                        } else {
+                            res.send({ data: vitals })
+                        }
+                    })
+                }
+
+            })
         }
+
     })
 })
 
@@ -312,24 +323,24 @@ app.post('/open/api/:code', (req, res) => {
 
 })
 
-app.post('/open/api/kit/:userid', (req, res)=>{
+app.post('/open/api/kit/:userid', (req, res) => {
     const { userid } = req.params
     const { arkit } = req.body
-    accountService.setKit(userid, arkit, (err,acc) => {
-        if(err){
+    accountService.setKit(userid, arkit, (err, acc) => {
+        if (err) {
             res.send({ message: "Error posting data" })
-        } else{
+        } else {
             res.send({ data: acc })
         }
     })
 })
 
-app.get('/open/api/kit/:userid', (req, res)=>{
+app.get('/open/api/kit/:userid', (req, res) => {
     const { userid } = req.params
-    accountService.getKit(userid, (err,acc)=>{
-        if(err){
+    accountService.getKit(userid, (err, acc) => {
+        if (err) {
             res.send({ message: "Error posting data" })
-        } else{
+        } else {
             res.send({ data: acc })
         }
     })

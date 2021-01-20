@@ -69,26 +69,9 @@
         </div>
         <div class="mainRight">
             <div id="statusMessage"></div>
-            <p id="cntContainer">
-                <label>Enter VitalBox Code:</label>
-                <input type="text" id="vtbcode">
-                <button onclick="connectvtb()">Connect</button>
-            </p>
             <p id="vtbout">
                 Connection to VitalBox...
             </p>
-            <!-- <div class="mainHeader">
-                <h6>Chat</h6>
-            </div>
-            <div class="mainChatWindow">
-                <ul class="messagesContainer">
-                </ul>
-            </div>
-            <div class="messageSendingTo">To: <span>Everyone <i class="fas fa-angle-down"></i></span> </div>
-            <div class="mainMessageContainer">
-                <input id="chatMessage" type="text" placeholder="Type message here...">
-            </div> -->
-
         </div>
     </div>
 </body>
@@ -100,11 +83,11 @@
             window.location.assign('/login')
         }
 
-        
+        var res = window.location.pathname.split("/")
+        connectvtb(res[2])
     })
 
-    connectvtb = () => {
-        let vtbcode = $("#vtbcode").val()
+    connectvtb = (vtbcode) => {
         setInterval(() => {
             $.ajax({
                     url: "/open/api/" + vtbcode,
@@ -116,12 +99,11 @@
                     } else if (!data.data) {
                         $(".statusMessage").text("Connection fail")
                     } else {
-                        $("#cntContainer").empty()
                         $("#vtbout").empty()
                         $("#vtbout").append(`
-                    Heartrate: ${data.data[0].data.heartrate} BPM<br>
-                    oxygen rate: ${data.data[0].data.o2}%<br>
-                    temperature: ${data.data[0].data.temperature}°C<br>
+                    Heartrate: ${data.data.data.heartrate} BPM<br>
+                    oxygen rate: ${data.data.data.o2}%<br>
+                    temperature: ${data.data.data.temperature}°C<br>
                     `)
                     }
                 })
