@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({
 //General
 
 app.get('/', function(req, res) {
-    res.render(__dirname + "/views/login")
+    res.render(__dirname + "/views/doctorlogin")
 })
 
 app.get('/:name', function(req, res) {
@@ -43,7 +43,7 @@ app.get('/:name', function(req, res) {
     if (views.includes(name)) {
         res.render(name + ".ejs")
     } else {
-        res.send("Error 404. This page doed not exist!")
+        res.send("Error 404. This page does not exist!")
     }
 })
 
@@ -274,8 +274,10 @@ app.post('/api/videoservice/end/:bookingId', (req, res) => {
 
 //Vitals
 
-app.get('/open/api/newsession', (req, res) => {
-    vitalsService.createSession((err, session) => {
+app.post('/open/api/newsession/:code', (req, res) => {
+    const { code } = req.params
+    //var code = req.params.code
+    vitalsService.createSession(code, (err, session) => {
         if (!err) {
             res.send(session)
         } else {
@@ -284,9 +286,9 @@ app.get('/open/api/newsession', (req, res) => {
     })
 })
 
-app.get('/open/api/:id', (req, res) => {
-    const { id } = req.params
-    vitalsService.getVitals(id, (err, session) => {
+app.get('/open/api/:code', (req, res) => {
+    const { code } = req.params
+    vitalsService.getVitals(code, (err, session) => {
         if (err) {
             res.send({ message: err })
         } else if (!session) {
@@ -297,10 +299,10 @@ app.get('/open/api/:id', (req, res) => {
     })
 })
 
-app.post('/open/api/:id', (req, res) => {
-    const { id } = req.params
+app.post('/open/api/:code', (req, res) => {
+    const { code } = req.params
     const { heartrate, oxygen, temperature } = req.body
-    vitalsService.updateData(id, heartrate, oxygen, temperature, (err, session) => {
+    vitalsService.updateData(code, heartrate, oxygen, temperature, (err, session) => {
         if (!err) {
             res.send({ message: "Successful posting data" })
         } else {
