@@ -1,4 +1,10 @@
 <h2>View Bookings page</h2>
+Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change</button>
+<div id="changearkit">
+    Kit code:
+    <input type="text" id="newArkit"><br>
+    <button onclick="changeKit()">Change</button>
+</div>
 <div id="bookingsTb"></div>
 
 <script src='/js/jquery.min.js'></script>
@@ -6,11 +12,50 @@
     startVideo = (bookingId) => {
         window.location.assign('/video/' + bookingId)
     }
+
+    showChange = () => {
+        $("#changearkit").css('display',"block")
+    }
+
+    changeKit = () => {
+        $.ajax({
+            url: '/open/api/kit/' + sessionStorage.id,
+            method: "post",
+            data: { arkit: $("#newArkit").val() }
+            })
+            .done(
+                (data) => {
+                    if(data.message) {
+                        $("#statusMessage").text(data.message)
+                    } else {
+                        $("#statusMessage").text("Kit Change")
+                        window.location.reload()
+                    }
+                }
+            )
+    }
+
     $(document).ready(function() {
+        $("#changearkit").css('display',"none")
+
         if (sessionStorage.login !== "user") {
             alert("Please login!")
             window.location.assign('/login')
         }
+
+        $.ajax({
+            url: '/open/api/kit/' + sessionStorage.id,
+            method: "get"
+            })
+            .done(
+                (data) => {
+                    if(data.message) {
+                        $("#statusMessage").text(data.message)
+                    } else {
+                        $("#arkitDis").text(data.data.arKit)
+                    }
+                }
+            )
 
         $.ajax({
                 url: '/api/getbookingbypatientid/' + sessionStorage.id,

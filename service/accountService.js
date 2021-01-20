@@ -18,7 +18,8 @@ let accountService = {
                     name: String,
                     email: String,
                     password: String,
-                    token: String
+                    token: String,
+                    arKit:String
                 })
                 var connection = mongoose.connection
                 accountModel = connection.model("accounts", accountSchema)
@@ -52,6 +53,12 @@ let accountService = {
     },
     removeToken(id, callback) {
         accountModel.findByIdAndUpdate(id, { $unset: { token: 1 } }, callback)
+    },
+    getKit(id, callback){
+        accountModel.findById(id, { arKit: 1 }, callback)
+    },
+    setKit(id, arKit, callback){
+        accountModel.findByIdAndUpdate(id, { arKit: arKit }, callback)
     }
 }
 

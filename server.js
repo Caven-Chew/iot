@@ -312,6 +312,29 @@ app.post('/open/api/:code', (req, res) => {
 
 })
 
+app.post('/open/api/kit/:userid', (req, res)=>{
+    const { userid } = req.params
+    const { arkit } = req.body
+    accountService.setKit(userid, arkit, (err,acc) => {
+        if(err){
+            res.send({ message: "Error posting data" })
+        } else{
+            res.send({ data: acc })
+        }
+    })
+})
+
+app.get('/open/api/kit/:userid', (req, res)=>{
+    const { userid } = req.params
+    accountService.getKit(userid, (err,acc)=>{
+        if(err){
+            res.send({ message: "Error posting data" })
+        } else{
+            res.send({ data: acc })
+        }
+    })
+})
+
 //Video call
 
 app.get('/video/:room', (req, res) => {

@@ -99,6 +99,8 @@
             alert("Please login!")
             window.location.assign('/login')
         }
+
+        
     })
 
     connectvtb = () => {
@@ -117,9 +119,9 @@
                         $("#cntContainer").empty()
                         $("#vtbout").empty()
                         $("#vtbout").append(`
-                    Heartrate: ${data.data[0].data.heartrate}<br>
-                    oxygen rate: ${data.data[0].data.o2}<br>
-                    temperature: ${data.data[0].data.temperature}<br>
+                    Heartrate: ${data.data[0].data.heartrate} BPM<br>
+                    oxygen rate: ${data.data[0].data.o2}%<br>
+                    temperature: ${data.data[0].data.temperature}°C<br>
                     `)
                     }
                 })
