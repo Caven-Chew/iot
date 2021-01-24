@@ -313,14 +313,52 @@ app.get('/open/api/:code', (req, res) => {
 app.post('/open/api/:code', (req, res) => {
     const { code } = req.params
     const { heartrate, oxygen, temperature } = req.body
-    vitalsService.updateData(code, heartrate, oxygen, temperature, (err, session) => {
-        if (!err) {
-            res.send({ message: "Successful posting data" })
+    bookingService.getBookingById(code, (err, bk) => {
+        if (err) {
+            res.send({ message: err })
         } else {
-            res.send({ message: "Error posting data" })
-        }
-    })
+            accountService.getKit(bk.patientId, (err, kitid) => {
+                if (err) {
+                    res.send({ message: err })
+                } else {
+                    vitalsService.updateData(kitid.arKit, heartrate, oxygen, temperature, (err, session) => {
+                        if (!err) {
+                            res.send({ data: "Successful posting data" })
+                        } else {
+                            res.send({ message: "Error posting data" })
+                        }
+                    })
+                }
 
+            })
+        }
+
+    })
+})
+
+app.get('/open/api/clear/:code', (req, res) => {
+    const { code } = req.params
+    bookingService.getBookingById(code, (err, bk) => {
+        if (err) {
+            res.send({ message: err })
+        } else {
+            accountService.getKit(bk.patientId, (err, kitid) => {
+                if (err) {
+                    res.send({ message: err })
+                } else {
+                    vitalsService.clearData(kitid.arKit, (err, session) => {
+                        if (!err) {
+                            res.send({ data: "Successful posting data" })
+                        } else {
+                            res.send({ message: "Error posting data" })
+                        }
+                    })
+                }
+
+            })
+        }
+
+    })
 })
 
 app.post('/open/api/kit/:userid', (req, res) => {

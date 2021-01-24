@@ -15,6 +15,7 @@ let vitalsService = {
                 console.log("Connected to Mongo DB")
                 vitalsSchema = schema({
                     code: String,
+                    lastupdate: String,
                     data: {
                         heartrate: Number,
                         o2: Number,
@@ -31,6 +32,7 @@ let vitalsService = {
     createSession(c, callback) {
         let newVitals = new vitalsModel({
             code: c,
+            lastupdate: "not updated",
             data: {
                 heartrate: 0,
                 o2: 0,
@@ -41,6 +43,7 @@ let vitalsService = {
     },
     updateData(c, hr, o2, temp, callback) {
         vitalsModel.findOneAndUpdate({ code: c }, {
+            lastupdate: new Date().toLocaleString(),
             data: {
                 heartrate: hr,
                 o2: o2,
@@ -48,8 +51,18 @@ let vitalsService = {
             }
         }, callback)
     },
+    clearData(c, callback) {
+        vitalsModel.findOneAndUpdate({ code: c }, {
+            lastupdate: "not updated",
+            data: {
+                heartrate: 0,
+                o2: 0,
+                temperature: 0
+            }
+        }, callback)
+    },
     getVitals(c, callback) {
-        vitalsModel.findOne({ code: c }, { data: 1 }, callback)
+        vitalsModel.findOne({ code: c }, { data: 1, lastupdate: 1 }, callback)
     }
 }
 
