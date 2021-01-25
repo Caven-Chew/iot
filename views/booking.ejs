@@ -31,7 +31,20 @@ Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change
                         $("#statusMessage").text(data.message)
                     } else {
                         $("#statusMessage").text("Kit Change")
-                        window.location.reload()
+                        $.ajax({
+                                url: '/open/api/newsession/' + data.kit,
+                                method: 'post'
+                            })
+                            .done(
+                                (ndata) => {
+                                    if (ndata.message) {
+                                        $("#statusMessage").text(data.message)
+                                    } else {
+                                        window.location.reload()
+                                    }
+                                }
+                            )
+
                     }
                 }
             )

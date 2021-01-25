@@ -368,7 +368,7 @@ app.post('/open/api/kit/:userid', (req, res) => {
         if (err) {
             res.send({ message: "Error posting data" })
         } else {
-            res.send({ data: acc })
+            res.send({ data: acc, kit: arkit })
         }
     })
 })
