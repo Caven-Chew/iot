@@ -38,6 +38,10 @@ app.get('/', function(req, res) {
     res.render(__dirname + "/views/doctorlogin")
 })
 
+app.get('/css/*', function(req, res)  {
+    res.sendFile(__dirname+"/views/"+req.originalUrl);
+});
+
 app.get('/:name', function(req, res) {
     let { name } = req.params
     if (views.includes(name)) {

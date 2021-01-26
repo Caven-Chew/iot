@@ -1,22 +1,22 @@
 <h2>Doctor Login page</h2>
 <p>
-    <form onsubmit="return login()">
-        <p>
-            <Label>Email:</Label>
-            <input type="text" id="email">
-        </p>
-        <p>
-            <Label>Password:</Label>
-            <input type="password" id="password">
-        </p>
-        <p>
-            <input type="submit" value="Login">
-        </p>
-    </form>
-    <a href="/doctorregister">Register</a>
+<form onsubmit="return login()">
+    <p>
+        <Label>Email:</Label>
+        <input type="text" id="email">
+    </p>
+    <p>
+        <Label>Password:</Label>
+        <input type="password" id="password">
+    </p>
+    <p>
+        <input type="submit" id="login" value="Login">
+    </p>
+</form>
+<button id="register"><a href="/doctorregister">Register</a></button>
 </p>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         if (sessionStorage.login === "doctor") {
             window.location.assign('/doctorbookings')
         }
@@ -27,10 +27,10 @@
             password: $("#password").val()
         }
         $.ajax({
-                url: "/api/doctor/login",
-                method: "post",
-                data: credentials
-            })
+            url: "/api/doctor/login",
+            method: "post",
+            data: credentials
+        })
             .done((data) => {
                 if (data.message) {
                     $("#statusMessage").text(data.message)

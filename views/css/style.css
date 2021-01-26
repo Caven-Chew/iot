@@ -1,0 +1,88 @@
+    html {
+        background: linear-gradient(227deg, #a529e8, #ab7ce0, #703daa, #5129ca, #526fea, #5276ea, #ea52dc, #ea52dc);
+        background-size: 1600% 1600%;
+        -webkit-animation: AnimationName 21s ease infinite;
+        -moz-animation: AnimationName 21s ease infinite;
+        -o-animation: AnimationName 21s ease infinite;
+        animation: AnimationName 21s ease infinite;
+    }
+
+    body {
+        background-color: white;
+        width: 60%;
+        height: 80vh;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 7vh;
+        font-family: "OpenSans";
+        font-size: 25px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    @font-face {
+        font-family: "OpenSans";
+        src: url(fonts/OpenSans-Regular.ttf);
+    }
+
+    input {
+        padding: 10px;
+        font-size: 25px;
+    }
+
+    label {
+        display: inline-block;
+        width: 15%;
+        text-align: left;
+    }
+
+    #login {
+        width: 45%;
+        border-radius: 7px;
+        box-shadow: 5px 5px 5px gray;
+    }
+
+    #register{
+        width: 45%;
+        border-radius: 7px;
+        box-shadow: 5px 5px 5px gray;
+        font-size: 25px;
+        padding: 7.5px;
+    }
+
+    #register a{
+        text-decoration: none;
+        color: black;
+    }
+
+    .css-selector {
+        background: linear-gradient(227deg, #a529e8, #ab7ce0, #703daa, #5129ca, #526fea, #5276ea, #ea52dc, #ea52dc);
+        background-size: 1600% 1600%;
+        -webkit-animation: AnimationName 21s ease infinite;
+        -moz-animation: AnimationName 21s ease infinite;
+        -o-animation: AnimationName 21s ease infinite;
+        animation: AnimationName 21s ease infinite;
+    }
+    @-webkit-keyframes AnimationName {
+        0%{background-position:0% 51%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 51%}
+    }
+    @-moz-keyframes AnimationName {
+        0%{background-position:0% 51%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 51%}
+    }
+    @-o-keyframes AnimationName {
+        0%{background-position:0% 51%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 51%}
+    }
+    @keyframes AnimationName {
+        0%{background-position:0% 51%}
+        50%{background-position:100% 50%}
+        100%{background-position:0% 51%}
+    }
+
+
+
