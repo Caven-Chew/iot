@@ -1,5 +1,5 @@
 <h2>View Bookings page</h2>
-Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change</button>
+Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" onclick="showChange()">Change</button>
 <div id="changearkit">
     <label>code:</label>
     <input type="text" id="newArkit"><br>
@@ -14,6 +14,7 @@ Arduino Kit Id: <span id="arkitDis"></span><button onclick="showChange()">Change
     }
 
     showChange = () => {
+        $("#changeBtn").css('display', "none")
         $("#changearkit").css('display', "block")
     }
 

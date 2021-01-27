@@ -49,12 +49,12 @@
             if (sessionStorage.login) {
                 if (sessionStorage.login === "user") {
                     $('#navi').html(`
-                <button id="booking" onclick="window.location.href='/booking'">Booking</button>
-                <button onclick="window.location.href='/addbooking'">Add Booking</button>
+                <button id="booking" class="btns" onclick="window.location.href='/booking'">Booking</button>
+                <button  class="btns" onclick="window.location.href='/addbooking'">Add Booking</button>
                 `)
                 } else {
                     $('#navi').html(`
-                <button id="booking"  class="btns" onclick="window.location.href='/doctorbookings'">Booking</button>
+                <button id="booking" class="btns" onclick="window.location.href='/doctorbookings'">Booking</button>
                 `)
                 }
             }
@@ -64,8 +64,10 @@
 </head>
 
 <body>
-    <div id="navi"></div>
-    <p id="logout"></p>
+    <div id="navbar">
+        <div id="navi"></div>
+        <p id="logout"></p>
+    </div>
     <h1 style="color: red">The VitalBox</h1>
     <div id="statusMessage"></div>
     <%- body %>
