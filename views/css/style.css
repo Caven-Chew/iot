@@ -57,7 +57,7 @@
 
     #logout {
         float: right;
-        margin-top: 255px;
+        margin: 0;
     }
 
     #booking {
