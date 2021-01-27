@@ -37,22 +37,38 @@
     }
 
     #login {
-        width: 45%;
+        width: 50%;
         border-radius: 7px;
         box-shadow: 5px 5px 5px gray;
     }
 
     #register{
-        width: 45%;
+        width: 50%;
         border-radius: 7px;
         box-shadow: 5px 5px 5px gray;
         font-size: 25px;
-        padding: 7.5px;
+        padding: 8.5px;
     }
 
     #register a{
         text-decoration: none;
         color: black;
+    }
+
+    #logout {
+        float: right;
+        margin-top: 255px;
+    }
+
+    #booking {
+        float:left;
+    }
+
+    .btns{
+        border-radius: 7px;
+        box-shadow: 5px 5px 5px gray;
+        height: 5vh;
+
     }
 
     .css-selector {
@@ -63,6 +79,7 @@
         -o-animation: AnimationName 21s ease infinite;
         animation: AnimationName 21s ease infinite;
     }
+    
     @-webkit-keyframes AnimationName {
         0%{background-position:0% 51%}
         50%{background-position:100% 50%}

@@ -1,6 +1,6 @@
 <h2>Doctor Login page</h2>
 <p>
-<form onsubmit="return login()">
+<form onsubmit="return ilogin()">
     <p>
         <Label>Email:</Label>
         <input type="text" id="email">
@@ -21,7 +21,7 @@
             window.location.assign('/doctorbookings')
         }
     })
-    login = () => {
+    ilogin = () => {
         var credentials = {
             email: $("#email").val(),
             password: $("#password").val()

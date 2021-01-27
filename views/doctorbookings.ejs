@@ -66,7 +66,7 @@
                                     $("#bookingsTb").append(`
                                 <article>
                                     <p>
-                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button> - <button onClick="startSession('${event._id}')">Start</button> - <button onClick="stopSession('${event._id}')">Stop</button>
+                                        ${event.patientName} - ${event.date} - ${event.date} - ${event.status} - <button  class="btns" onClick="startVideo('${event._id}')">Enter</button> - <button  class="btns" onClick="startSession('${event._id}')">Start</button> - <button  class="btns" onClick="stopSession('${event._id}')">Stop</button>
                                     </p>
                                 </article>
                             `)
