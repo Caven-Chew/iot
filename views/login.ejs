@@ -1,23 +1,23 @@
 <h2>Login page</h2>
 <p>
-    <form onsubmit="return login()">
-        <p>
-            <Label>Email:</Label>
-            <input type="text" name="email" id="email">
-        </p>
-        <p>
-            <Label>Password:</Label>
-            <input type="password" name="password" id="password">
-        </p>
-        <p>
-            <input type="submit">
-        </p>
-    </form>
-    <a href="/register">Register</a>
+<form onsubmit="return login()">
+    <p>
+        <Label>Email:</Label>
+        <input type="text" name="email" id="email">
+    </p>
+    <p>
+        <Label>Password:</Label>
+        <input type="password" name="password" id="password">
+    </p>
+    <p>
+        <input id="submit" type="submit">
+    </p>
+</form>
+<button id="register"><a href="/register">Register</a></button>
 </p>
 <script src='/js/jquery.min.js'></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         if (sessionStorage.login === "user") {
             window.location.assign('/booking')
         }
@@ -28,10 +28,10 @@
             password: $("#password").val()
         }
         $.ajax({
-                url: "/api/login",
-                method: "post",
-                data: credentials
-            })
+            url: "/api/login",
+            method: "post",
+            data: credentials
+        })
             .done((data) => {
                 if (data.message) {
                     $("#statusMessage").text(data.message)

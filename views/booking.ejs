@@ -1,9 +1,9 @@
 <h2>View Bookings page</h2>
-Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" onclick="showChange()">Change</button>
+Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" class="btns" onclick="showChange()">Change</button>
 <div id="changearkit">
     <label>code:</label>
     <input type="text" id="newArkit"><br>
-    <button onclick="changeKit()">Change</button>
+    <button class="btns" onclick="changeKit()">Change</button>
 </div>
 <div id="bookingsTb"></div>
 
@@ -97,7 +97,7 @@ Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" onclick="showC
                                 $("#bookingsTb").append(`
                                     <article>
                                         <p>
-                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button class="btns" disabled>Enter</button>
                                         </p>
                                     </article>
                                 `)
@@ -106,7 +106,7 @@ Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" onclick="showC
                                     $("#bookingsTb").append(`
                                     <article>
                                         <p>
-                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button onClick="startVideo('${event._id}')">Enter</button>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button class="btns" onClick="startVideo('${event._id}')">Enter</button>
                                         </p>
                                     </article>
                                 `)
@@ -114,7 +114,7 @@ Arduino Kit Id: <span id="arkitDis"></span><button id="changeBtn" onclick="showC
                                     $("#bookingsTb").append(`
                                     <article>
                                         <p>
-                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button disabled>Enter</button>
+                                            ${event.doctorName} - ${event.date} - ${event.date} - ${event.status} - <button class="btns" disabled>Enter</button>
                                         </p>
                                     </article>
                                 `)
