@@ -1,5 +1,5 @@
 <h2>Add Doctor page</h2>
-<form onsubmit="return register()">
+<form onsubmit="return iregister()">
     <p>
         <Label>Name:</Label>
         <input type="text" id="name">
@@ -27,7 +27,7 @@
             window.location.assign('/doctorbookings')
         }
     })
-    register = () => {
+    iregister = () => {
         if ($("#password").val() !== $("#confirmpassword").val()) {
             $("#statusMessage").text("The passwords does not match! Please enter again.")
         } else {

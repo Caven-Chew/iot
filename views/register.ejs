@@ -35,7 +35,7 @@
         return false
     }
 
-    register = () => {
+    iregister = () => {
         let credentials = {
             name: $("#name").val(),
             email: $("#email").val(),
@@ -65,7 +65,7 @@
 
 <h2>Registration page</h2>
 <p>
-    <form onsubmit="return register()">
+    <form onsubmit="return iregister()">
         <p>
             <Label>Name:</Label>
             <input type="text" id="name">
